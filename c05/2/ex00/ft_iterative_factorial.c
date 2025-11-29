@@ -1,0 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_iterative_factorial.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbarreir <jbarreir@student.42madrid.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/18 12:18:01 by jbarreir          #+#    #+#             */
+/*   Updated: 2025/11/19 12:57:34 by jbarreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+
+int	ft_iterative_factorial(int nb);
+
+/*
+int	main(void)
+{
+	int fac5 = ft_iterative_factorial(5);
+	int fac9 = ft_iterative_factorial(9);
+	int fac26 = ft_iterative_factorial(26);
+	int fac58 = ft_iterative_factorial(58);
+
+	printf("El resultado de 5! es : %i\n", fac5);
+	printf("El resultado de 9! es : %i\n", fac9);
+	printf("El resultado de 26! es : %i\n", fac26);
+	printf("El resultado de 58! es : %i\n", fac58);
+	return (0);
+}
+*/
+
+int	ft_iterative_factorial(int nb)
+{
+	int		i;
+	int		result;
+
+	if (nb < 0)
+		return (0);
+	if (nb == 0)
+		return (1);
+	i = 0;
+	result = nb;
+	while (nb > 1)
+	{
+		result *= (nb - 1);
+		nb--;
+	}
+	return (result);
+}
