@@ -6,7 +6,7 @@
 /*   By: jbarreir <jbarreir@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:36:35 by jbarreir          #+#    #+#             */
-/*   Updated: 2025/11/27 09:39:43 by jbarreir         ###   ########.fr       */
+/*   Updated: 2025/12/03 16:41:47 by jbarreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,86 +15,57 @@
 #include <stddef.h>
 
 char	*ft_convert_base(char *nbr, char *base_from, char *base_to);
-long	to_10(char *fbase, char *base, int baselen);
-void	ft_nbr_base(long n10, char *tbase, char *base, int baselen);
+long	to_10(char *old_n, char *base, int baselen, int i);
+void	ft_nbr_base(long n10, char *new_n, char *base, int baselen);
 int		checkbase(char *base, int baselen);
-int		ft_strlen(char *str);
 void	ft_strcat(char *dest, char *src);
-void	take_nbr(char *str, char *base, char *fbase, int j);
-void	sign(char *nbr, char *tbase);
-int		jump_to_nbr(char *nbr);
+void	take_nbr(char *str, char *base, char *old_n, int j);
+void	sign(char *nbr, char *new_n);
+char	*alloc_and_check(void);
+int		ft_strlen(char *str);
+int		is_base(char c, char *base);
+int		what(char c);
 
 char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 {
 	long	n10;
-	char	*fbase;
-	char	*tbase;
-	int		baselen;
-	int		j;
+	char	*new_n;
 
-	if (!(checkbase(base_from, ft_strlen(base_from))))
-		return (NULL);
-	if (!(checkbase(base_to, ft_strlen(base_to))))
-		return (NULL);
-	fbase = malloc(34);
-	tbase = malloc(34);
-	if (fbase == NULL || tbase == NULL)
-		return (NULL);
-	fbase[0] = '\0';
-	tbase[0] = '\0';
-	baselen = ft_strlen(base_from);
-	j = 0;
-	take_nbr(nbr, base_from, fbase, j);
-	n10 = to_10(fbase, base_from, baselen);
-	baselen = ft_strlen(base_to);
-	sign(nbr, tbase);
-	ft_nbr_base(n10, tbase, base_to, baselen);
-	free(fbase);
-	return (tbase);
-}
-
-void	take_nbr(char *nbr, char *base, char *fbase, int j)
-{
-	int		k;
-	int		i;
-	int		match;
-
-	j = 0;
-	i = jump_to_nbr(nbr);
-	while (nbr[i])
+	new_n = alloc_and_check();
+	if (!nbr || !base_from || !base_to || !new_n
+		|| !(checkbase(base_from, ft_strlen(base_from))))
 	{
-		k = 0;
-		match = 0;
-		while (base[k])
-		{
-			if (nbr[i] == base[k])
-			{
-				match = 1;
-				break ;
-			}
-			k++;
-		}
-		if (!match)
-			break ;
-		fbase[j++] = nbr[i++];
+		free(new_n);
+		return (NULL);
 	}
-	fbase[j] = '\0';
+	n10 = to_10(nbr, base_from, ft_strlen(base_from), 0);
+	if (!(checkbase(base_to, ft_strlen(base_to))))
+	{
+		free(new_n);
+		return (NULL);
+	}
+	if (n10 != 0)
+		sign(nbr, new_n);
+	ft_nbr_base(n10, new_n, base_to, ft_strlen(base_to));
+	return (new_n);
 }
 
-long	to_10(char *fbase, char *base, int baselen)
+long	to_10(char *nbr, char *base, int baselen, int i)
 {
 	long	n10;
-	int		i;
 	int		j;
 
-	i = 0;
 	n10 = 0;
-	while (fbase[i])
+	while (what(nbr[i]) == 1)
+		i++;
+	while (what(nbr[i]) == 2)
+		i++;
+	while (nbr[i] && is_base(nbr[i], base))
 	{
 		j = 0;
 		while (base[j])
 		{
-			if (fbase[i] == base[j])
+			if (nbr[i] == base[j])
 			{
 				n10 = (n10 * baselen) + j;
 				break ;
@@ -106,15 +77,30 @@ long	to_10(char *fbase, char *base, int baselen)
 	return (n10);
 }
 
-void	ft_nbr_base(long n10, char *tbase, char *base, int baselen)
+void	ft_nbr_base(long n10, char *new_n, char *base, int baselen)
 {
-	int		i;
-
-	i = 0;
 	if (n10 >= baselen)
-		ft_nbr_base((n10 / baselen), tbase, base, baselen);
-	ft_strcat(tbase, &base[n10 % baselen]);
-	while (tbase[i])
-		i++;
-	tbase[i] = '\0';
+		ft_nbr_base((n10 / baselen), new_n, base, baselen);
+	ft_strcat(new_n, &base[n10 % baselen]);
+}
+
+char	*alloc_and_check(void)
+{
+	char	*new_nbr;
+
+	new_nbr = (char *)malloc(sizeof(char) * 34);
+	if (!new_nbr)
+		return (NULL);
+	new_nbr[0] = '\0';
+	return (new_nbr);
+}
+
+int	what(char c)
+{
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return (1);
+	else if (c == '+' || c == '-')
+		return (2);
+	else
+		return (0);
 }

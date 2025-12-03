@@ -6,15 +6,22 @@
 /*   By: jbarreir <jbarreir@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 20:18:16 by jbarreir          #+#    #+#             */
-/*   Updated: 2025/11/26 15:15:57 by jbarreir         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:38:40 by jbarreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 
-int		ft_strlen(char *str);
-void	ft_strcat(char *dest, char *src);
-int		jump_to_nbr(char *nbr);
+int	ft_strlen(char *str)
+{
+	int		len;
+
+	len = 0;
+	while (str && str[len])
+		len++;
+	return (len);
+}
 
 int	checkbase(char *base, int baselen)
 {
@@ -33,7 +40,7 @@ int	checkbase(char *base, int baselen)
 				return (0);
 			j++;
 		}
-		if (base[i] == '+' || base[i] == '-' || base[i] == ' '
+		if (base[i] == ' ' || base[i] == '+' || base[i] == '-'
 			|| (base[i] >= 9 && base[i] <= 13))
 			return (0);
 		i++;
@@ -41,28 +48,18 @@ int	checkbase(char *base, int baselen)
 	return (1);
 }
 
-int	ft_strlen(char *str)
-{
-	int		cnt;
-
-	cnt = 0;
-	while (!(str[cnt] == '\0'))
-		cnt++;
-	return (cnt);
-}
-
 void	ft_strcat(char *dest, char *src)
 {
 	int		j;
 
 	j = 0;
-	while (dest[j])
+	while (dest && dest[j])
 		j++;
 	dest[j] = src[0];
 	dest[j + 1] = '\0';
 }
 
-void	sign(char *nbr, char *tbase)
+void	sign(char *nbr, char *new_n)
 {
 	int		sign;
 	int		i;
@@ -79,20 +76,21 @@ void	sign(char *nbr, char *tbase)
 	}
 	if (sign == -1)
 	{
-		tbase[0] = '-';
-		tbase[1] = '\0';
+		new_n[0] = '-';
+		new_n[1] = '\0';
 	}
 }
 
-int	jump_to_nbr(char *nbr)
+int	is_base(char c, char *base)
 {
-	int		j;
+	int		i;
 
-	j = 0;
-	while (nbr[j] == '+' || nbr[j] == '-' || nbr[j] == ' '
-		|| (nbr[j] >= 9 && nbr[j] <= 13))
+	i = 0;
+	while (base && base[i])
 	{
-		j++;
+		if (base[i] == c)
+			return (1);
+		i++;
 	}
-	return (j);
+	return (0);
 }
