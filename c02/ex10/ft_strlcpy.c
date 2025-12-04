@@ -6,38 +6,28 @@
 /*   By: jbarreir <jbarreir@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:00:50 by jbarreir          #+#    #+#             */
-/*   Updated: 2025/11/12 10:27:27 by jbarreir         ###   ########.fr       */
+/*   Updated: 2025/12/04 10:57:26 by jbarreir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-#include <stdio.h>
-
-unsigned	int ft_strlcpy(char *dest, char *src, unsigned int size);
-
-int     main(void)
-{
-    char    *src = "Qué pasa evaluador? Qué te cuentas? Te mola el código?\n";
-    char    dest[1000];
-	unsigned int	len;
-
-    len = ft_strlcpy(dest, src, 10);
-    printf("%s\n", dest);
-	printf("Total char in origin: %i\n", len);
-    return (0);
-}
-*/
-
 unsigned int	ft_strlcpy(char *dest, char *src, unsigned int size)
 {
-	unsigned int		cnt;
+	unsigned int		i;
+	unsigned int		len;
 
-	cnt = 0;
-	while (src[cnt] != '\0' || cnt < size)
+	if (!dest || !src)
+		return (0);
+	len = 0;
+	while (src[len])
+		len++;
+	if (size == 0)
+		return (len);
+	i = 0;
+	while (src[i] && i < size - 1)
 	{
-		dest[cnt] = src[cnt];
-		cnt++;
+		dest[i] = src[i];
+		i++;
 	}
-	dest[size] = '\0';
-	return (cnt);
+	dest[i] = '\0';
+	return (len);
 }
